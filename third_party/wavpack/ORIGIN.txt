@@ -1,0 +1,5 @@
+WavPack 5.9.0, BSD-style license (COPYING).
+https://www.wavpack.com/wavpack-5.9.0.tar.xz
+SHA256: b5291bc4e6d69ebbd3da3800c5bf4a70f19bb92679b23e09b3b612c1e648d1ff
+Static PCM decoder. No DSD, threading, CLI or legacy pre-4.0 decoder enabled.
+Source release attachments contain the exact upstream source used by the build.

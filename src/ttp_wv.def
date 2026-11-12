@@ -1,0 +1,3 @@
+LIBRARY ttp_wv
+EXPORTS
+    ttpGetSoundAddIn=_ttpGetSoundAddIn@4

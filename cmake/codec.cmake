@@ -1,0 +1,20 @@
+include(FetchContent)
+set(CMAKE_POLICY_VERSION_MINIMUM 3.10)
+if(NOT FETCHCONTENT_SOURCE_DIR_TTPLAYER_WAVPACK AND EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/third_party/wavpack/source/CMakeLists.txt")
+  set(FETCHCONTENT_SOURCE_DIR_TTPLAYER_WAVPACK "${CMAKE_CURRENT_SOURCE_DIR}/third_party/wavpack/source")
+endif()
+set(BUILD_SHARED_LIBS OFF CACHE BOOL "Static decoder" FORCE)
+set(BUILD_TESTING OFF CACHE BOOL "No upstream tests" FORCE)
+foreach(option BUILD_PROGRAMS ENABLE_THREADS ENABLE_DSD ENABLE_ASM INSTALL_CMAKE_MODULE INSTALL_DOCS INSTALL_PKGCONFIG_MODULE)
+  set(WAVPACK_${option} OFF CACHE BOOL "Minimal legacy PCM decoder" FORCE)
+endforeach()
+FetchContent_Declare(ttplayer_wavpack
+  URL https://www.wavpack.com/wavpack-5.9.0.tar.xz
+  URL_HASH SHA256=b5291bc4e6d69ebbd3da3800c5bf4a70f19bb92679b23e09b3b612c1e648d1ff
+  DOWNLOAD_EXTRACT_TIMESTAMP TRUE)
+FetchContent_MakeAvailable(ttplayer_wavpack)
+file(READ "${ttplayer_wavpack_SOURCE_DIR}/configure.ac" _wavpack_configure)
+if(NOT _wavpack_configure MATCHES "AC_INIT\\(\\[wavpack\\], \\[5\\.9\\.0\\]")
+  message(FATAL_ERROR "Expected WavPack 5.9.0 sources")
+endif()
+file(WRITE "${CMAKE_CURRENT_BINARY_DIR}/codec-source-path.txt" "${ttplayer_wavpack_SOURCE_DIR}")
