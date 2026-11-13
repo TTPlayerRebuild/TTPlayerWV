@@ -23,7 +23,8 @@ Invoke-CMake @('--install',$BuildDirectory,'--config','Release','--component','R
 $hash = (Get-FileHash -LiteralPath (Join-Path $stage "AddIn/$plugin.dll") -Algorithm SHA256).Hash.ToLowerInvariant()
 "$hash  AddIn/$plugin.dll" | Set-Content -LiteralPath (Join-Path $stage 'SHA256SUMS.txt') -Encoding UTF8
 $archive = Join-Path $output "$plugin-$PackageVersion.zip"
-Compress-Archive -LiteralPath (Join-Path $stage 'AddIn'),(Join-Path $stage 'SHA256SUMS.txt') -DestinationPath $archive -Force
+& python (Join-Path $PSScriptRoot 'cmake/package_runtime.py') --dll (Join-Path $stage "AddIn/$plugin.dll") --output $archive
+if ($LASTEXITCODE -ne 0) { throw 'Runtime packaging failed.' }
 $archives = @($archive)
 if ($SourcePackage) {
     & python (Join-Path $PSScriptRoot 'cmake/package_source.py') --root $PSScriptRoot --build $BuildDirectory --version $PackageVersion
